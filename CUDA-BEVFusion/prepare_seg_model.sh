@@ -161,6 +161,24 @@ else
 fi
 
 # ---------------------------------------------------------------------------
+# 5b) nuScenes map expansion v1.3.
+#     The segmentation config pulls in LoadBEVSegmentation, which constructs a
+#     NuScenesMap for every location and therefore needs
+#     <root>/maps/expansion/<location>.json.  The v1.0-mini tarball does not
+#     ship these.  The official nuscenes.org/data URL now returns an HTML error
+#     page, so fetch the same v1.3 archive from its Zenodo mirror.
+# ---------------------------------------------------------------------------
+echo "[5b/8] Preparing nuScenes map expansion..."
+if [ ! -f "$DATA_DIR/maps/expansion/singapore-onenorth.json" ]; then
+    wget -q --show-progress -c -O "$DATA_DIR/nuScenes-map-expansion-v1.3.zip" \
+        "https://zenodo.org/records/15667707/files/nuScenes-map-expansion-v1.3.zip?download=1"
+    unzip -q -o "$DATA_DIR/nuScenes-map-expansion-v1.3.zip" -d "$DATA_DIR/maps"
+    rm -f "$DATA_DIR/nuScenes-map-expansion-v1.3.zip"
+else
+    echo "    nuScenes map expansion already exists, skipping."
+fi
+
+# ---------------------------------------------------------------------------
 # 6) Generate nuscenes_infos_{train,val}.pkl + nuscenes_dbinfos_train.pkl.
 #    Use absolute paths so ptq.py can be run from any CWD.
 # ---------------------------------------------------------------------------

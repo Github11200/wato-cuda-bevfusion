@@ -24,9 +24,9 @@
 
 export TensorRT_Lib=/usr/lib/x86_64-linux-gnu
 export TensorRT_Inc=/usr/include/x86_64-linux-gnu
-export TensorRT_Bin=/usr/src/tensorrt/bin
+export TensorRT_Bin=/usr/bin
 
-export CUDA_HOME=/usr/local/cuda
+export CUDA_HOME=/opt/cuda
 export CUDA_Lib=$CUDA_HOME/lib64
 export CUDA_Inc=$CUDA_HOME/include
 export CUDA_Bin=$CUDA_HOME/bin
