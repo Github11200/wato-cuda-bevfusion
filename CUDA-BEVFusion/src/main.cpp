@@ -220,8 +220,8 @@ std::shared_ptr<bevfusion::Core> create_core(const std::string &model, const std
   transbbox.sorted_bboxes = true;
 
   bevfusion::head::segmap::SegHeadParameters segmap;
-  segmap.threshold = 0.5;
   segmap.enabled = true;
+  segmap.threshold = 0.5;
   segmap.model = nv::format("model/%s/build/head.seg.plan", model.c_str());
 
   bevfusion::CoreParameter param;

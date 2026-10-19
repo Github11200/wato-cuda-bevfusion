@@ -23,7 +23,6 @@ namespace bevfusion
         std::string model;
         bool enabled;
         float threshold;
-        int downsample;
       };
 
       struct MapView

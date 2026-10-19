@@ -19,10 +19,6 @@ static __global__ void apply_threshold_kernel(unsigned int total, const half *lo
   mask[i] = probability > threshold ? 1 : 0;
 }
 
-static __global__ void apply_downsample_kernel()
-{
-}
-
 namespace bevfusion
 {
   namespace head
