@@ -79,9 +79,10 @@ function compile_trt_model(){
         return
     fi
     
-    # Remove the onnx dependency
-    # get_onnx_number_io $onnx
-    # echo $number_of_input  $number_of_output
+    # Derive the I/O counts from the ONNX graph so the generated
+    # --inputIOFormats/--outputIOFormats entries always match the network
+    # (e.g. the segmentation camera.backbone has 1 input, detection has 2).
+    get_onnx_number_io $onnx
 
     input_flags="--inputIOFormats="
     output_flags="--outputIOFormats="
@@ -119,8 +120,12 @@ compile_trt_model "fuser" "$trtexec_dynamic_flags" 2 1
 # fp16 only
 compile_trt_model "camera.vtransform" "$trtexec_fp16_flags" 1 1
 
-# for myelin layernorm head.bbox, may occur a tensorrt bug at layernorm fusion but faster
-compile_trt_model "head.bbox" "$trtexec_fp16_flags" 1 6
-
-# for layernorm version head.bbox.onnx, accurate but slower
-# compile_trt_model "head.bbox.layernormplugin" "$trtexec_fp16_flags" 1 6 "--plugins=libcustom_layernorm.so"
+# Segmentation head takes priority if present, otherwise fall back to bbox head.
+if [ -f "$base/head.seg.onnx" ]; then
+    compile_trt_model "head.seg" "$trtexec_fp16_flags" 1 1
+elif [ -f "$base/head.bbox.onnx" ]; then
+    # for myelin layernorm head.bbox, may occur a tensorrt bug at layernorm fusion but faster
+    compile_trt_model "head.bbox" "$trtexec_fp16_flags" 1 6
+    # for layernorm version head.bbox.onnx, accurate but slower
+    # compile_trt_model "head.bbox.layernormplugin" "$trtexec_fp16_flags" 1 6 "--plugins=libcustom_layernorm.so"
+fi

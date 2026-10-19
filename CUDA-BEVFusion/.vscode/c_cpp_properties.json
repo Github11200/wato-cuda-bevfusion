@@ -2,11 +2,13 @@
     "configurations": [
         {
             "name": "Linux",
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/usr/local/cuda-12.1/include/**",
+                "/opt/cuda/include/**",
                 "${workspaceFolder}/src/**",
                 "${workspaceFolder}/../dependencies/stb/**",
+                "${workspaceFolder}/../dependencies/dlpack/include/**",
                 "${workspaceFolder}/../dependencies/pybind11/include/**",
                 "${workspaceFolder}/../libraries/3DSparseConvolution/libspconv/include/**",
                 "${workspaceFolder}/../libraries/cuOSD/src/**"
@@ -14,7 +16,7 @@
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "c17",
-            "cppStandard": "gnu++14",
+            "cppStandard": "gnu++17",
             "intelliSenseMode": "linux-gcc-x64"
         }
     ],
