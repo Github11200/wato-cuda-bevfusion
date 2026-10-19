@@ -13,48 +13,48 @@
 
 namespace bevfusion
 {
-    namespace head
+  namespace head
+  {
+    namespace segmap
     {
-        namespace segmap
+
+      struct SegHeadParameters
+      {
+        std::string model;
+        bool enabled;
+        float threshold;
+      };
+
+      struct MapView
+      {
+        const nvtype::half *data = nullptr;
+        int classes = 0;
+        int height = 0;
+        int width = 0;
+        int origin_x = 0;
+        int origin_y = 0;
+        double resolution = 0.0;
+
+        std::vector<unsigned char> masks;
+
+        bool valid() const
         {
+          return data != nullptr && classes > 0 && height > 0 && width > 0;
+        }
+        size_t numel() const { return static_cast<int>(classes) * height * width; }
+      };
 
-            struct SegHeadParameters
-            {
-                std::string model;
-                bool enabled;
-                float threshold;
-            };
+      class SegMap
+      {
+      public:
+        virtual MapView forward(const nvtype::half *fusion_feature, void *stream) = 0;
+        virtual void print() = 0;
+      };
 
-            struct MapView
-            {
-                const nvtype::half *data = nullptr;
-                int classes = 0;
-                int height = 0;
-                int width = 0;
-                int origin_x = 0;
-                int origin_y = 0;
-                double resolution = 0.0;
+      std::shared_ptr<SegMap> create_maphead(const SegHeadParameters &param);
 
-                std::vector<unsigned char> masks;
-
-                bool valid() const
-                {
-                    return data != nullptr && classes > 0 && height > 0 && width > 0;
-                }
-                size_t numel() const { return static_cast<int>(classes) * height * width; }
-            };
-
-            class SegMap
-            {
-            public:
-                virtual MapView forward(const nvtype::half *fusion_feature, void *stream) = 0;
-                virtual void print() = 0;
-            };
-
-            std::shared_ptr<SegMap> create_maphead(const SegHeadParameters &param);
-
-        } // namespace map
-    } // namespace head
+    } // namespace map
+  } // namespace head
 } // namespace segmap
 
 #endif
